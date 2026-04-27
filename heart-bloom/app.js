@@ -20,6 +20,7 @@ let lastFrame = performance.now();
 let lastAmbientSpawn = 0;
 let lastTrailSpawn = 0;
 let sceneFlash = 0;
+let heartFlashTimer = null;
 
 function resizeCanvas() {
   const dpr = window.devicePixelRatio || 1;
@@ -77,6 +78,21 @@ function drawHeartShape(x, y, size, rotation, color, alpha) {
   context.shadowColor = color;
   context.fill();
   context.restore();
+}
+
+function triggerHeartFlash() {
+  heart.classList.remove("heart--flaring");
+  void heart.offsetWidth;
+  heart.classList.add("heart--flaring");
+
+  if (heartFlashTimer) {
+    window.clearTimeout(heartFlashTimer);
+  }
+
+  heartFlashTimer = window.setTimeout(() => {
+    heart.classList.remove("heart--flaring");
+    heartFlashTimer = null;
+  }, 420);
 }
 
 function drawSpark(x, y, size, color, alpha) {
@@ -139,9 +155,7 @@ function spawnBurst(x, y, count, spread = 1) {
     });
   }
 
-  heart.classList.remove("heart--bursting");
-  void heart.offsetWidth;
-  heart.classList.add("heart--bursting");
+  triggerHeartFlash();
 }
 
 function spawnAmbientHeart() {
@@ -321,7 +335,7 @@ function setPointerPosition(clientX, clientY) {
 
 function launchFromCenter() {
   const rect = heart.getBoundingClientRect();
-  spawnBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 48, 1.2);
+  spawnBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 56, 1.3);
   hint.textContent = "再点一次，或者滑动屏幕，让爱心一路开花。";
 }
 
