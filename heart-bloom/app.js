@@ -1,5 +1,6 @@
 const canvas = document.querySelector("[data-sky]");
 const context = canvas.getContext("2d");
+const petalsLayer = document.querySelector("[data-petals]");
 const burstButton = document.querySelector("[data-burst]");
 const heart = document.querySelector("[data-heart]");
 const hint = document.querySelector("[data-hint]");
@@ -21,9 +22,10 @@ let lastAmbientSpawn = 0;
 let lastTrailSpawn = 0;
 let sceneFlash = 0;
 let heartFlashTimer = null;
+const activePetals = [];
 
 function resizeCanvas() {
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.min(window.devicePixelRatio || 1, prefersReducedMotion ? 1.25 : 1.5);
   width = window.innerWidth;
   height = window.innerHeight;
   canvas.width = Math.floor(width * dpr);
@@ -34,8 +36,8 @@ function resizeCanvas() {
 
   ambientStars.length = 0;
   ambientOrbs.length = 0;
-  const starCount = Math.max(18, Math.floor((width * height) / 24000));
-  const orbCount = Math.max(8, Math.floor((width * height) / 60000));
+  const starCount = Math.max(12, Math.floor((width * height) / 36000));
+  const orbCount = Math.max(4, Math.floor((width * height) / 120000));
 
   for (let index = 0; index < starCount; index += 1) {
     ambientStars.push({
@@ -74,7 +76,7 @@ function drawHeartShape(x, y, size, rotation, color, alpha) {
   context.closePath();
   context.fillStyle = color;
   context.globalAlpha = alpha;
-  context.shadowBlur = 18;
+  context.shadowBlur = 12;
   context.shadowColor = color;
   context.fill();
   context.restore();
@@ -100,7 +102,7 @@ function drawSpark(x, y, size, color, alpha) {
   context.translate(x, y);
   context.fillStyle = color;
   context.globalAlpha = alpha;
-  context.shadowBlur = 16;
+  context.shadowBlur = 10;
   context.shadowColor = color;
   context.beginPath();
   context.arc(0, 0, size, 0, Math.PI * 2);
@@ -108,14 +110,51 @@ function drawSpark(x, y, size, color, alpha) {
   context.restore();
 }
 
+function spawnPetals(x, y, count, spread = 1) {
+  if (!petalsLayer) {
+    return;
+  }
+
+  const total = prefersReducedMotion ? Math.ceil(count * 0.4) : count;
+
+  for (let index = 0; index < total; index += 1) {
+    const petal = document.createElement("span");
+    const angle = Math.random() * Math.PI * 2;
+    const distance = (24 + Math.random() * 96) * spread;
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance - (18 + Math.random() * 34);
+    const scale = 0.7 + Math.random() * 0.55;
+    const hue = 332 + Math.random() * 24;
+    const delay = Math.random() * 60;
+
+    petal.className = "petal";
+    petal.style.left = `${x}px`;
+    petal.style.top = `${y}px`;
+    petal.style.setProperty("--dx", `${dx}px`);
+    petal.style.setProperty("--dy", `${dy}px`);
+    petal.style.setProperty("--rot", `${Math.round(Math.random() * 360)}deg`);
+    petal.style.setProperty("--scale", String(scale));
+    petal.style.background = `linear-gradient(180deg, hsla(${hue} 100% 96% / 0.98), hsla(${hue} 100% 72% / 0.9) 62%, hsla(${hue + 10} 100% 58% / 0.92))`;
+    petal.style.animationDelay = `${delay}ms`;
+
+    petalsLayer.appendChild(petal);
+
+    activePetals.push({
+      el: petal,
+      expiresAt: performance.now() + 900 + delay,
+    });
+  }
+}
+
 function spawnBurst(x, y, count, spread = 1) {
   const total = prefersReducedMotion ? Math.ceil(count * 0.5) : count;
-  sceneFlash = Math.min(1, sceneFlash + 0.45);
+  sceneFlash = Math.min(1, sceneFlash + 0.32);
+  spawnPetals(x, y, Math.max(5, Math.floor(count * 0.65)), spread * 0.9);
 
   for (let index = 0; index < total; index += 1) {
     const angle = Math.random() * Math.PI * 2;
-    const speed = (1.5 + Math.random() * 3.5) * spread;
-    const size = 5 + Math.random() * 12;
+    const speed = (1.2 + Math.random() * 2.7) * spread;
+    const size = 4 + Math.random() * 10;
     const hue = 334 + Math.random() * 28;
 
     particles.push({
@@ -135,21 +174,21 @@ function spawnBurst(x, y, count, spread = 1) {
     });
   }
 
-  const ringCount = prefersReducedMotion ? 6 : 12;
+  const ringCount = prefersReducedMotion ? 4 : 8;
   for (let index = 0; index < ringCount; index += 1) {
     const angle = (Math.PI * 2 * index) / ringCount + Math.random() * 0.12;
     particles.push({
       x: x + Math.cos(angle) * 10,
       y: y + Math.sin(angle) * 10,
-      vx: Math.cos(angle) * (0.6 + Math.random() * 1.1) * spread,
-      vy: Math.sin(angle) * (0.6 + Math.random() * 1.1) * spread - 0.15,
-      gravity: 0.01 + Math.random() * 0.014,
-      drag: 0.991,
-      size: 2.2 + Math.random() * 2.8,
+      vx: Math.cos(angle) * (0.5 + Math.random() * 0.8) * spread,
+      vy: Math.sin(angle) * (0.5 + Math.random() * 0.8) * spread - 0.12,
+      gravity: 0.008 + Math.random() * 0.01,
+      drag: 0.992,
+      size: 2 + Math.random() * 2.2,
       rotation: Math.random() * Math.PI,
       spin: (Math.random() - 0.5) * 0.09,
       life: 0,
-      maxLife: 48 + Math.random() * 24,
+      maxLife: 42 + Math.random() * 20,
       kind: "spark",
       color: `hsl(${328 + Math.random() * 30} 100% ${82 + Math.random() * 10}%)`,
     });
@@ -162,15 +201,15 @@ function spawnAmbientHeart() {
   particles.push({
     x: Math.random() * width,
     y: height + 40,
-    vx: (Math.random() - 0.5) * 0.75,
-    vy: -(0.7 + Math.random() * 0.95),
+    vx: (Math.random() - 0.5) * 0.55,
+    vy: -(0.55 + Math.random() * 0.7),
     gravity: -0.0006,
-    drag: 0.996,
-    size: 5 + Math.random() * 8,
+    drag: 0.997,
+    size: 4 + Math.random() * 6,
     rotation: Math.random() * Math.PI,
-    spin: (Math.random() - 0.5) * 0.024,
+    spin: (Math.random() - 0.5) * 0.016,
     life: 0,
-    maxLife: 120 + Math.random() * 90,
+    maxLife: 100 + Math.random() * 70,
     kind: "heart",
     color: `hsla(${332 + Math.random() * 18} 100% ${78 + Math.random() * 10}% / 1)`,
   });
@@ -233,8 +272,8 @@ function renderBackground() {
     pointer.y,
     Math.max(width, height) * 0.34,
   );
-  glow.addColorStop(0, "rgba(255, 188, 219, 0.18)");
-  glow.addColorStop(0.32, "rgba(255, 109, 164, 0.1)");
+  glow.addColorStop(0, "rgba(255, 188, 219, 0.12)");
+  glow.addColorStop(0.32, "rgba(255, 109, 164, 0.06)");
   glow.addColorStop(1, "rgba(255, 109, 164, 0)");
   context.fillStyle = glow;
   context.fillRect(0, 0, width, height);
@@ -247,8 +286,8 @@ function renderBackground() {
     height * 0.82,
     Math.max(width, height) * 0.7,
   );
-  veil.addColorStop(0, "rgba(255, 173, 203, 0.08)");
-  veil.addColorStop(0.45, "rgba(255, 114, 167, 0.03)");
+  veil.addColorStop(0, "rgba(255, 173, 203, 0.05)");
+  veil.addColorStop(0.45, "rgba(255, 114, 167, 0.02)");
   veil.addColorStop(1, "rgba(255, 114, 167, 0)");
   context.fillStyle = veil;
   context.fillRect(0, 0, width, height);
@@ -306,20 +345,32 @@ function updateParticles() {
   context.restore();
 }
 
+function updatePetals(now) {
+  for (let index = activePetals.length - 1; index >= 0; index -= 1) {
+    const petal = activePetals[index];
+
+    if (now >= petal.expiresAt) {
+      petal.el.remove();
+      activePetals.splice(index, 1);
+    }
+  }
+}
+
 function animate(now) {
   const elapsed = now - lastFrame;
   lastFrame = now;
 
   renderBackground();
   updateParticles();
+  updatePetals(now);
 
-  if (!prefersReducedMotion && now - lastAmbientSpawn > 110) {
+  if (!prefersReducedMotion && now - lastAmbientSpawn > 180) {
     spawnAmbientHeart();
     lastAmbientSpawn = now;
   }
 
-  if (pointer.active && now - lastTrailSpawn > 36) {
-    spawnBurst(pointer.x, pointer.y, 5, 0.36);
+  if (pointer.active && now - lastTrailSpawn > 52) {
+    spawnBurst(pointer.x, pointer.y, 3, 0.32);
     lastTrailSpawn = now;
   }
 
@@ -335,8 +386,16 @@ function setPointerPosition(clientX, clientY) {
 
 function launchFromCenter() {
   const rect = heart.getBoundingClientRect();
-  spawnBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 56, 1.3);
+  spawnBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 36, 1.1);
   hint.textContent = "再点一次，或者滑动屏幕，让爱心一路开花。";
+}
+
+function spawnClickBloom(x, y) {
+  spawnBurst(x, y, 24, 0.95);
+
+  window.setTimeout(() => {
+    spawnBurst(x, y, 10, 0.62);
+  }, 90);
 }
 
 burstButton.addEventListener("click", launchFromCenter);
@@ -344,8 +403,36 @@ burstButton.addEventListener("click", launchFromCenter);
 window.addEventListener("pointerdown", (event) => {
   pointer.active = true;
   setPointerPosition(event.clientX, event.clientY);
-  spawnBurst(event.clientX, event.clientY, 32, 1);
+
+  if (event.pointerType === "mouse") {
+    spawnClickBloom(event.clientX, event.clientY);
+  } else {
+    spawnBurst(event.clientX, event.clientY, 32, 1);
+  }
 });
+
+if (!window.PointerEvent) {
+  window.addEventListener("mousedown", (event) => {
+    pointer.active = true;
+    setPointerPosition(event.clientX, event.clientY);
+    spawnClickBloom(event.clientX, event.clientY);
+  });
+  window.addEventListener(
+    "touchstart",
+    (event) => {
+      const touch = event.touches[0];
+
+      if (!touch) {
+        return;
+      }
+
+      pointer.active = true;
+      setPointerPosition(touch.clientX, touch.clientY);
+      spawnBurst(touch.clientX, touch.clientY, 20, 0.95);
+    },
+    { passive: true },
+  );
+}
 
 window.addEventListener("pointermove", (event) => {
   setPointerPosition(event.clientX, event.clientY);
