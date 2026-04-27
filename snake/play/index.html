@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+    />
+    <title>Classic Snake Play</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="frame">
+        <div class="header">
+          <div>
+            <p class="eyebrow">Classic Snake</p>
+            <h1>贪吃蛇</h1>
+          </div>
+
+          <div class="stats" aria-live="polite">
+            <div class="stat">
+              <span>Score</span>
+              <strong data-score>0</strong>
+            </div>
+            <div class="stat">
+              <span>Status</span>
+              <strong data-status>Ready</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="board-wrap">
+          <canvas class="board" data-board width="640" height="640" aria-label="Snake game board"></canvas>
+          <div class="overlay" data-overlay>
+            <p class="overlay__title">按空格开始 / 暂停</p>
+            <p class="overlay__copy">方向键或 WASD 控制移动，点击按钮也可以操作。</p>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button type="button" class="control control--wide" data-toggle>暂停 / 继续</button>
+          <button type="button" class="control" data-restart>重新开始</button>
+        </div>
+
+        <div class="pad" aria-label="Snake controls">
+          <div></div>
+          <button type="button" class="pad__btn" data-dir="up">▲</button>
+          <div></div>
+          <button type="button" class="pad__btn" data-dir="left">◀</button>
+          <button type="button" class="pad__btn pad__btn--center" data-dir="pause">⏯</button>
+          <button type="button" class="pad__btn" data-dir="right">▶</button>
+          <div></div>
+          <button type="button" class="pad__btn" data-dir="down">▼</button>
+          <div></div>
+        </div>
+
+        <p class="hint">
+          键盘：方向键 / WASD 控制，空格暂停，Enter 重开。
+          <a href="../">返回说明页</a>
+        </p>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

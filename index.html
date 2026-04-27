@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Heart Bloom Projects</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+        --bg-a: #16061f;
+        --bg-b: #07010f;
+        --panel: rgba(22, 9, 35, 0.7);
+        --panel-2: rgba(255, 255, 255, 0.04);
+        --line: rgba(255, 196, 219, 0.16);
+        --text: #fff5fb;
+        --muted: rgba(255, 231, 241, 0.76);
+        --accent: #ff5a90;
+        --accent-2: #72f0bf;
+        --accent-3: #7ec9ff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        color: var(--text);
+        background:
+          radial-gradient(circle at 15% 15%, rgba(255, 90, 144, 0.18), transparent 22%),
+          radial-gradient(circle at 82% 18%, rgba(114, 240, 191, 0.14), transparent 18%),
+          radial-gradient(circle at 50% 80%, rgba(126, 201, 255, 0.12), transparent 24%),
+          linear-gradient(180deg, var(--bg-a), var(--bg-b) 72%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .shell {
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .glow {
+        position: absolute;
+        border-radius: 999px;
+        filter: blur(24px);
+        opacity: 0.55;
+        pointer-events: none;
+      }
+
+      .glow--one {
+        top: 4rem;
+        left: -4rem;
+        width: 12rem;
+        height: 12rem;
+        background: rgba(255, 90, 144, 0.25);
+      }
+
+      .glow--two {
+        right: 4rem;
+        top: 18rem;
+        width: 14rem;
+        height: 14rem;
+        background: rgba(114, 240, 191, 0.16);
+      }
+
+      .glow--three {
+        left: 50%;
+        bottom: -5rem;
+        width: 18rem;
+        height: 18rem;
+        background: rgba(126, 201, 255, 0.12);
+        transform: translateX(-50%);
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        width: min(100%, 76rem);
+        margin: 0 auto;
+        padding: 1.2rem;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.5rem 0 1.2rem;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        min-width: 0;
+      }
+
+      .brand__mark {
+        width: 2.8rem;
+        height: 2.8rem;
+        border-radius: 0.95rem;
+        background:
+          radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.25), transparent 32%),
+          linear-gradient(135deg, #ff8eb7, #ff4c84 52%, #ff2b62);
+        box-shadow: 0 16px 30px rgba(255, 61, 116, 0.28);
+      }
+
+      .brand__text {
+        min-width: 0;
+      }
+
+      .brand__kicker {
+        margin: 0;
+        color: #ffd2e5;
+        letter-spacing: 0.2em;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+      }
+
+      .brand__title {
+        margin: 0.2rem 0 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+      }
+
+      .nav {
+        display: flex;
+        gap: 0.7rem;
+        flex-wrap: wrap;
+      }
+
+      .nav a {
+        padding: 0.72rem 1rem;
+        border: 1px solid rgba(255, 210, 228, 0.16);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--muted);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 1rem;
+        align-items: stretch;
+      }
+
+      .hero__copy,
+      .hero__panel {
+        border: 1px solid var(--line);
+        border-radius: 2rem;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+          var(--panel);
+        backdrop-filter: blur(18px);
+        box-shadow:
+          0 28px 90px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      }
+
+      .hero__copy {
+        padding: clamp(1.4rem, 3vw, 2.2rem);
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: #ffd4e4;
+        letter-spacing: 0.22em;
+        font-size: 0.74rem;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0.7rem 0 0;
+        font-size: clamp(3rem, 8vw, 5.5rem);
+        line-height: 0.92;
+        letter-spacing: -0.03em;
+      }
+
+      .lead {
+        width: min(100%, 38rem);
+        margin: 1rem 0 0;
+        color: var(--muted);
+        font-size: clamp(1rem, 2vw, 1.08rem);
+        line-height: 1.7;
+      }
+
+      .hero__facts {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.8rem;
+        margin-top: 1.4rem;
+      }
+
+      .fact {
+        padding: 0.95rem 1rem;
+        border-radius: 1.15rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 210, 228, 0.12);
+      }
+
+      .fact span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.76rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .fact strong {
+        display: block;
+        margin-top: 0.28rem;
+        font-size: 1.12rem;
+      }
+
+      .hero__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-top: 1.5rem;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 3rem;
+        padding: 0.8rem 1.15rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 210, 228, 0.18);
+        background: linear-gradient(135deg, #ff8db8, #ff4d84 48%, #ff2b62);
+        color: white;
+        font-weight: 700;
+        box-shadow: 0 14px 30px rgba(255, 63, 118, 0.3);
+      }
+
+      .button--ghost {
+        background: rgba(255, 255, 255, 0.04);
+        box-shadow: none;
+      }
+
+      .hero__panel {
+        padding: 1.1rem;
+        display: grid;
+        gap: 0.9rem;
+        align-content: start;
+      }
+
+      .preview {
+        position: relative;
+        overflow: hidden;
+        min-height: 18rem;
+        border-radius: 1.5rem;
+        border: 1px solid rgba(255, 210, 228, 0.14);
+        background:
+          radial-gradient(circle at 28% 28%, rgba(255, 111, 162, 0.34), transparent 24%),
+          radial-gradient(circle at 72% 26%, rgba(126, 201, 255, 0.24), transparent 20%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+      }
+
+      .preview::before,
+      .preview::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.12), transparent 42%);
+        mix-blend-mode: screen;
+      }
+
+      .preview__badge {
+        position: absolute;
+        left: 1rem;
+        bottom: 1rem;
+        padding: 0.65rem 0.9rem;
+        border-radius: 999px;
+        background: rgba(5, 10, 18, 0.68);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(10px);
+        font-size: 0.9rem;
+      }
+
+      .preview__badge strong {
+        display: block;
+        font-size: 1rem;
+      }
+
+      .mini {
+        display: grid;
+        gap: 0.6rem;
+      }
+
+      .mini__row {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: center;
+        padding: 0.95rem 1rem;
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 210, 228, 0.1);
+      }
+
+      .mini__row span {
+        color: var(--muted);
+      }
+
+      .mini__row strong {
+        color: var(--text);
+      }
+
+      .section {
+        margin-top: 1rem;
+      }
+
+      .section__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 1rem;
+        margin: 1.6rem 0 0.9rem;
+      }
+
+      .section__header h2 {
+        margin: 0;
+        font-size: 1.15rem;
+        letter-spacing: 0.04em;
+      }
+
+      .section__header p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .card {
+        position: relative;
+        overflow: hidden;
+        min-height: 24rem;
+        padding: 1.1rem;
+        border-radius: 1.8rem;
+        border: 1px solid rgba(255, 210, 228, 0.14);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+          rgba(255, 255, 255, 0.03);
+        box-shadow:
+          0 22px 64px rgba(0, 0, 0, 0.24),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        transition:
+          transform 180ms ease,
+          border-color 180ms ease,
+          background 180ms ease;
+      }
+
+      .card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(255, 210, 228, 0.28);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+          rgba(255, 255, 255, 0.04);
+      }
+
+      .card__top {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: start;
+      }
+
+      .card__label {
+        margin: 0;
+        color: #ffd4e4;
+        font-size: 0.74rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .card h3 {
+        margin: 0.45rem 0 0;
+        font-size: 1.7rem;
+        line-height: 1;
+      }
+
+      .card__tag {
+        padding: 0.45rem 0.7rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .card__copy {
+        margin: 0.9rem 0 0;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .card__art {
+        position: relative;
+        height: 11rem;
+        margin-top: 1rem;
+        border-radius: 1.35rem;
+        overflow: hidden;
+        border: 1px solid rgba(255, 210, 228, 0.12);
+      }
+
+      .card__art--heart {
+        background:
+          radial-gradient(circle at 50% 50%, rgba(255, 112, 160, 0.28), transparent 25%),
+          linear-gradient(180deg, rgba(255, 120, 166, 0.08), rgba(255, 255, 255, 0.02));
+      }
+
+      .card__art--snake {
+        background:
+          radial-gradient(circle at 20% 20%, rgba(114, 240, 191, 0.22), transparent 20%),
+          radial-gradient(circle at 80% 20%, rgba(126, 201, 255, 0.14), transparent 18%),
+          linear-gradient(180deg, rgba(84, 255, 194, 0.04), rgba(255, 255, 255, 0.02));
+      }
+
+      .heart-rings,
+      .snake-grid {
+        position: absolute;
+        inset: 0;
+      }
+
+      .heart-rings::before,
+      .heart-rings::after {
+        content: "";
+        position: absolute;
+        inset: 50%;
+        width: 7.5rem;
+        height: 7.5rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 132, 171, 0.26);
+        transform: translate(-50%, -50%);
+      }
+
+      .heart-rings::after {
+        width: 4.5rem;
+        height: 4.5rem;
+        border-color: rgba(255, 255, 255, 0.18);
+      }
+
+      .snake-grid {
+        background-image:
+          linear-gradient(rgba(150, 236, 205, 0.14) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(150, 236, 205, 0.14) 1px, transparent 1px);
+        background-size: 1.6rem 1.6rem;
+        opacity: 0.3;
+      }
+
+      .snake-path {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 20% 74%, rgba(125, 242, 197, 0.95), transparent 6%),
+          radial-gradient(circle at 34% 70%, rgba(125, 242, 197, 0.95), transparent 6%),
+          radial-gradient(circle at 48% 66%, rgba(125, 242, 197, 0.95), transparent 6%),
+          radial-gradient(circle at 62% 62%, rgba(125, 242, 197, 0.95), transparent 6%),
+          radial-gradient(circle at 76% 58%, rgba(125, 242, 197, 0.95), transparent 6%),
+          radial-gradient(circle at 80% 42%, rgba(255, 125, 151, 0.95), transparent 7%);
+      }
+
+      .card__footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.8rem;
+        align-items: center;
+        margin-top: 1rem;
+      }
+
+      .meta {
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .card__buttons {
+        display: flex;
+        gap: 0.7rem;
+        flex-wrap: wrap;
+      }
+
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin: 1.2rem 0 0.4rem;
+        padding: 1rem 0 0.2rem;
+        color: rgba(255, 231, 241, 0.6);
+        font-size: 0.92rem;
+      }
+
+      .footer a {
+        color: #ffd4e4;
+      }
+
+      @media (max-width: 980px) {
+        .hero,
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero__facts {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .container {
+          padding: 0.8rem;
+        }
+
+        .topbar,
+        .section__header,
+        .footer,
+        .card__footer {
+          align-items: start;
+          flex-direction: column;
+        }
+
+        .nav {
+          width: 100%;
+        }
+
+        .nav a {
+          flex: 1;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <div class="glow glow--one" aria-hidden="true"></div>
+      <div class="glow glow--two" aria-hidden="true"></div>
+      <div class="glow glow--three" aria-hidden="true"></div>
+
+      <div class="container">
+        <header class="topbar">
+          <div class="brand">
+            <div class="brand__mark" aria-hidden="true"></div>
+            <div class="brand__text">
+              <p class="brand__kicker">GitHub Pages Portfolio</p>
+              <p class="brand__title">Heart Bloom Projects</p>
+            </div>
+          </div>
+
+          <nav class="nav" aria-label="Quick links">
+            <a href="./heart-bloom/">Heart Bloom</a>
+            <a href="./snake/play/">Snake Game</a>
+          </nav>
+        </header>
+
+        <section class="hero">
+          <div class="hero__copy">
+            <p class="eyebrow">Two static demos, one polished landing page</p>
+            <h1>作品集首页，先被看见，再被打开。</h1>
+            <p class="lead">
+              这是一个可以直接部署到 GitHub Pages 的静态站点首页。
+              我们把两个项目做成了更像作品集卡片的入口，让访问者一眼看懂内容，再一键进入体验。
+            </p>
+
+            <div class="hero__facts" aria-label="Project summary">
+              <div class="fact">
+                <span>Project 01</span>
+                <strong>Heart Bloom</strong>
+              </div>
+              <div class="fact">
+                <span>Project 02</span>
+                <strong>Classic Snake</strong>
+              </div>
+              <div class="fact">
+                <span>Deploy</span>
+                <strong>Root folder</strong>
+              </div>
+            </div>
+
+            <div class="hero__actions">
+              <a class="button" href="./snake/play/">Play Snake</a>
+              <a class="button button--ghost" href="./heart-bloom/">Open Heart Bloom</a>
+            </div>
+          </div>
+
+          <aside class="hero__panel" aria-label="Project preview">
+            <div class="preview">
+              <div class="preview__badge">
+                <strong>Live previews</strong>
+                <span>Heart Bloom + Snake</span>
+              </div>
+            </div>
+
+            <div class="mini">
+              <div class="mini__row">
+                <span>Hero style</span>
+                <strong>Bold, glassy, responsive</strong>
+              </div>
+              <div class="mini__row">
+                <span>Links</span>
+                <strong>Relative paths only</strong>
+              </div>
+              <div class="mini__row">
+                <span>Target</span>
+                <strong>GitHub Pages root</strong>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="section">
+          <div class="section__header">
+            <div>
+              <h2>Featured Projects</h2>
+              <p>Each card acts like a showcase entry with a clear action.</p>
+            </div>
+          </div>
+
+          <div class="grid">
+            <article class="card">
+              <div class="card__top">
+                <div>
+                  <p class="card__label">Project 01</p>
+                  <h3>Heart Bloom</h3>
+                </div>
+                <div class="card__tag">Interactive animation</div>
+              </div>
+
+              <p class="card__copy">
+                原生 HTML / CSS / JavaScript 实现的爱心粒子动画。
+                适合做首页的视觉门面，点击、拖动和移动端触摸都会触发漂亮的反馈。
+              </p>
+
+              <div class="card__art card__art--heart" aria-hidden="true">
+                <div class="heart-rings"></div>
+              </div>
+
+              <div class="card__footer">
+                <div class="meta">Desktop and mobile friendly.</div>
+                <div class="card__buttons">
+                  <a class="button" href="./heart-bloom/">Open demo</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card__top">
+                <div>
+                  <p class="card__label">Project 02</p>
+                  <h3>Classic Snake</h3>
+                </div>
+                <div class="card__tag">Playable game</div>
+              </div>
+
+              <p class="card__copy">
+                可直接游玩的贪吃蛇入口，保留计分、暂停、重新开始和方向控制。
+                首页可以直接把人带到游戏页，也可以先从跳转页进入。
+              </p>
+
+              <div class="card__art card__art--snake" aria-hidden="true">
+                <div class="snake-grid"></div>
+                <div class="snake-path"></div>
+              </div>
+
+              <div class="card__footer">
+                <div class="meta">Keyboard + touch controls.</div>
+                <div class="card__buttons">
+                  <a class="button" href="./snake/play/">Play now</a>
+                  <a class="button button--ghost" href="./snake/">Open entry</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <span>Deploy from repository root for GitHub Pages.</span>
+          <span>Source: <a href="./README.md">README</a></span>
+        </footer>
+      </div>
+    </main>
+  </body>
+</html>

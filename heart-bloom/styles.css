@@ -1,0 +1,288 @@
+:root {
+  color-scheme: dark;
+  font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+  --bg-top: #17071f;
+  --bg-bottom: #06010f;
+  --card: rgba(26, 10, 39, 0.8);
+  --card-border: rgba(255, 203, 224, 0.34);
+  --text: #fff4fb;
+  --muted: rgba(255, 230, 241, 0.78);
+  --accent: #ff5f97;
+  --accent-strong: #ff336d;
+  --accent-soft: rgba(255, 116, 167, 0.26);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top, rgba(255, 92, 150, 0.28), transparent 28%),
+    radial-gradient(circle at 20% 20%, rgba(255, 139, 177, 0.24), transparent 20%),
+    radial-gradient(circle at 80% 25%, rgba(255, 214, 232, 0.12), transparent 18%),
+    linear-gradient(180deg, var(--bg-top), var(--bg-bottom) 72%);
+  color: var(--text);
+  touch-action: manipulation;
+}
+
+button {
+  font: inherit;
+}
+
+.sky {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.scene {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding:
+    max(1.25rem, env(safe-area-inset-top))
+    1rem
+    max(1.25rem, env(safe-area-inset-bottom))
+    1rem;
+}
+
+.scene::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 144, 185, 0.08), transparent 28%),
+    radial-gradient(circle at 18% 72%, rgba(255, 200, 221, 0.06), transparent 18%),
+    radial-gradient(circle at 80% 76%, rgba(255, 255, 255, 0.05), transparent 16%);
+  filter: blur(26px);
+  opacity: 0.9;
+}
+
+.hero {
+  width: min(100%, 34rem);
+  padding: 1.4rem 1.2rem 1.5rem;
+  border: 1px solid var(--card-border);
+  border-radius: 2rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.05)),
+    var(--card);
+  backdrop-filter: blur(26px);
+  box-shadow:
+    0 32px 110px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 171, 205, 0.18), transparent 18%),
+    radial-gradient(circle at 50% 58%, rgba(255, 103, 155, 0.12), transparent 28%);
+  filter: blur(18px);
+  pointer-events: none;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero__eyebrow {
+  margin: 0;
+  color: #ffd2e5;
+  letter-spacing: 0.24em;
+  font-size: 0.72rem;
+}
+
+.hero h1 {
+  margin: 0.45rem 0 0;
+  font-size: clamp(2.6rem, 10vw, 4.8rem);
+  line-height: 0.92;
+}
+
+.hero__copy {
+  width: min(100%, 24rem);
+  margin: 0.9rem auto 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 3.8vw, 1.08rem);
+  line-height: 1.6;
+}
+
+.heart-stage {
+  position: relative;
+  width: min(70vw, 18rem);
+  aspect-ratio: 1;
+  margin: 1.6rem auto 1.3rem;
+  display: grid;
+  place-items: center;
+}
+
+.heart-stage__halo {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(12px);
+  animation: haloPulse 4.2s ease-in-out infinite;
+}
+
+.heart-stage__halo--outer {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 91, 150, 0.36), transparent 62%);
+}
+
+.heart-stage__halo--inner {
+  width: 64%;
+  height: 64%;
+  background: radial-gradient(circle, rgba(255, 201, 220, 0.55), transparent 70%);
+  animation-duration: 2.8s;
+}
+
+.heart {
+  position: relative;
+  width: min(32vw, 7.8rem);
+  aspect-ratio: 1;
+  transform: rotate(-45deg);
+  border-radius: 1.4rem;
+  background:
+    linear-gradient(135deg, #ffd0e0, #ff6e9f 48%, #ff2f69 100%);
+  box-shadow:
+    0 0 32px rgba(255, 94, 151, 0.6),
+    0 0 85px rgba(255, 57, 115, 0.34),
+    0 0 140px rgba(255, 170, 200, 0.08);
+  animation: heartBeat 1.1s ease-in-out infinite;
+}
+
+.heart::before,
+.heart::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.heart::before {
+  top: -50%;
+  left: 0;
+}
+
+.heart::after {
+  top: 0;
+  left: 50%;
+}
+
+.heart--bursting {
+  animation: heartBeat 1.1s ease-in-out infinite, heartFlash 460ms ease-out;
+}
+
+.hero__actions {
+  display: grid;
+  gap: 0.9rem;
+  justify-items: center;
+}
+
+.burst-button {
+  min-width: min(100%, 15rem);
+  border: 0;
+  border-radius: 999px;
+  padding: 0.95rem 1.5rem;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background:
+    linear-gradient(135deg, #ffc4d8, #ff5f92 45%, #ff235e 100%);
+  box-shadow:
+    0 14px 32px rgba(255, 65, 120, 0.42),
+    0 0 24px rgba(255, 106, 154, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34);
+}
+
+.burst-button:active {
+  transform: scale(0.98);
+}
+
+.hero__hint {
+  margin: 0;
+  color: rgba(255, 240, 247, 0.78);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+@keyframes heartBeat {
+  0%,
+  100% {
+    transform: rotate(-45deg) scale(0.96);
+  }
+
+  30% {
+    transform: rotate(-45deg) scale(1.05);
+  }
+
+  52% {
+    transform: rotate(-45deg) scale(0.98);
+  }
+
+  74% {
+    transform: rotate(-45deg) scale(1.12);
+  }
+}
+
+@keyframes haloPulse {
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+
+@keyframes heartFlash {
+  0% {
+    filter: brightness(1);
+  }
+
+  50% {
+    filter: brightness(1.24);
+  }
+
+  100% {
+    filter: brightness(1);
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding: 1.2rem 1rem 1.3rem;
+    border-radius: 1.5rem;
+  }
+
+  .heart-stage {
+    width: min(82vw, 18rem);
+  }
+
+  .burst-button {
+    width: 100%;
+  }
+}
