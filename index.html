@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Heart Bloom Projects</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+        --bg-a: #18061f;
+        --bg-b: #07010f;
+        --panel: rgba(24, 10, 36, 0.66);
+        --line: rgba(255, 196, 219, 0.18);
+        --text: #fff4fb;
+        --muted: rgba(255, 231, 241, 0.76);
+        --accent: #ff5a90;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        color: var(--text);
+        background:
+          radial-gradient(circle at top, rgba(255, 88, 147, 0.2), transparent 30%),
+          radial-gradient(circle at 15% 20%, rgba(255, 164, 199, 0.14), transparent 18%),
+          linear-gradient(180deg, var(--bg-a), var(--bg-b) 72%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .shell {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+      }
+
+      .card {
+        width: min(100%, 52rem);
+        padding: clamp(1.2rem, 3vw, 2rem);
+        border: 1px solid var(--line);
+        border-radius: 2rem;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+          var(--panel);
+        box-shadow:
+          0 30px 100px rgba(0, 0, 0, 0.34),
+          inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(20px);
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: #ffd4e4;
+        letter-spacing: 0.24em;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0.55rem 0 0;
+        font-size: clamp(2.8rem, 8vw, 5rem);
+        line-height: 0.94;
+      }
+
+      .lead {
+        width: min(100%, 42rem);
+        margin: 1rem 0 0;
+        color: var(--muted);
+        font-size: clamp(1rem, 3.4vw, 1.1rem);
+        line-height: 1.65;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .tile {
+        min-height: 11rem;
+        padding: 1.1rem;
+        border: 1px solid rgba(255, 196, 219, 0.14);
+        border-radius: 1.4rem;
+        background: rgba(255, 255, 255, 0.03);
+        transition:
+          transform 180ms ease,
+          border-color 180ms ease,
+          background 180ms ease;
+      }
+
+      .tile:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 196, 219, 0.34);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .tile__label {
+        margin: 0;
+        color: #ffbdd4;
+        font-size: 0.8rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .tile h2 {
+        margin: 0.45rem 0 0;
+        font-size: 1.45rem;
+      }
+
+      .tile p {
+        margin: 0.75rem 0 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-top: 1.4rem;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.8rem;
+        padding: 0.75rem 1.1rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 210, 228, 0.2);
+        background: linear-gradient(135deg, #ff8db8, #ff4d84 50%, #ff2b62);
+        color: white;
+        font-weight: 700;
+        box-shadow: 0 14px 30px rgba(255, 63, 118, 0.32);
+      }
+
+      .button--ghost {
+        background: rgba(255, 255, 255, 0.04);
+        box-shadow: none;
+      }
+
+      .footer {
+        margin-top: 1.25rem;
+        color: rgba(255, 230, 241, 0.6);
+        font-size: 0.92rem;
+      }
+
+      @media (max-width: 720px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .card {
+          border-radius: 1.4rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="card">
+        <p class="eyebrow">GitHub Pages Ready</p>
+        <h1>Heart Bloom Projects</h1>
+        <p class="lead">
+          这个仓库整理成了一个可以直接用 GitHub Pages 部署的静态站点入口。
+          下面分别是爱心动画 Demo 和贪吃蛇核心逻辑，两块内容都可以直接打开查看。
+        </p>
+
+        <div class="grid">
+          <a class="tile" href="./heart-bloom/">
+            <p class="tile__label">Project 01</p>
+            <h2>Heart Bloom</h2>
+            <p>
+              原生 HTML / CSS / JavaScript 实现的爱心粒子特效页面，点击、拖动和移动端都能触发动画。
+            </p>
+          </a>
+
+          <a class="tile" href="./snake/">
+            <p class="tile__label">Project 02</p>
+            <h2>Classic Snake</h2>
+            <p>
+              贪吃蛇的核心规则与测试用例说明页，附带源码和测试文件入口，适合做静态站点展示。
+            </p>
+          </a>
+        </div>
+
+        <div class="actions">
+          <a class="button" href="./heart-bloom/">打开 Heart Bloom</a>
+          <a class="button button--ghost" href="./snake/">查看 Snake 说明</a>
+        </div>
+
+        <p class="footer">
+          部署时直接把 GitHub Pages 指向仓库根目录即可，所有链接都使用相对路径。
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
